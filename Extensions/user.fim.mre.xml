@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RulesFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<Rules>
+		<Rule>
+			<Name>provision person to ad</Name>
+			<Description></Description>
+			<TargetManagementAgentName xsi:type="xsd:string">TEST</TargetManagementAgentName>
+			<Enabled>true</Enabled>
+			<SourceObject>person</SourceObject>
+			<TargetObject>user</TargetObject>
+			<Action>Provision</Action>
+			<Helpers>
+				<ScopedGuid Name="DNGuid"></ScopedGuid>
+				<Constant Name="Password">
+					<Value>Passw0rd!</Value>
+				</Constant>
+			</Helpers>
+			<Conditions>
+				<ConditionBase xsi:type="ConditionIsPresent">
+					<Description></Description>
+					<MVAttribute>accountName</MVAttribute>
+				</ConditionBase>
+
+			</Conditions>
+			<InitialFlows>
+				<AttributeFlowBase xsi:type="AttributeFlowConstant">
+					<EscapedCN>CN=#mv:accountName#</EscapedCN>
+					<Constant>#param:EscapedCN#,OU=Test Users,DC=Test,DC=Test</Constant>
+					<Target>[DN]</Target>
+				</AttributeFlowBase>
+				<AttributeFlowBase xsi:type="AttributeFlowConstant">
+					<EscapedCN>#mv:accountName#</EscapedCN>
+					<Constant>#param:EscapedCN#@test.test</Constant>
+					<Target>UserPrincipalName</Target>
+				</AttributeFlowBase>
+				<AttributeFlowBase xsi:type="AttributeFlowConstant">
+					<Constant>#helper:Password#</Constant>
+					<Target>unicodePwd</Target>
+				</AttributeFlowBase>
+				<AttributeFlowBase xsi:type="AttributeFlowConstant">
+					<Constant>514</Constant>
+					<Target>userAccountControl</Target>
+				</AttributeFlowBase>
+				<AttributeFlowBase xsi:type="AttributeFlowAttribute">
+					<Source>accountName</Source>
+					<Target>sAMAccountName</Target>
+				</AttributeFlowBase>
+			</InitialFlows>
+		</Rule>
+
+	</Rules>
+</RulesFile>
